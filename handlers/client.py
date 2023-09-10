@@ -1,8 +1,8 @@
 import time
-
 from aiogram import types, Dispatcher
 from addit_bot import dp, bot
 from keyboards import kb_client
+from data_base import sqlite_db
 from aiogram.types import ReplyKeyboardRemove # функция для удаления клавиатуры с экрана
 
 # @dp.message_handler(commands=['start', 'help'])
@@ -18,8 +18,8 @@ async def command_start(message: types.Message):
 async def info_company(message: types.Message):
     await bot.send_message(message.from_user.id, 'Меня зовут Екатерина и я занимаюсь созданием изделий из эпоксидной смолы')
 
-async def client_menu():
-    pass
+async def client_menu(message: types.Message):
+    await sqlite_db.sql_read(message)
 
 # Если в один из await, в коцне в скобках добавить строку reply_markup=ReplyKeyboardRemove, то клавиатура исчезнет
 # при нажатии этой функции
@@ -27,3 +27,4 @@ async def client_menu():
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(command_start, commands=['start', 'help'])
     dp.register_message_handler(info_company, commands=['Информация'])
+    dp.register_message_handler(client_menu, commands=['Меню'])
